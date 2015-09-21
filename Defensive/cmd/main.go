@@ -19,19 +19,22 @@ func main() {
 		fmt.Println("Scanning...")
 		ships, sectors, err := scan(ship)
 		if err != nil {
-			fmt.Println("Unable to scan")
+			fmt.Printf("Unable to scan: %s\n", err.Error())
 		} else {
-			escapeSector := sectors[0]
-			fmt.Printf("Selected escape sector %s", escapeSector.Name)
-			if len(ships) > 0 {
-				fmt.Println("ALERT! Detected Ship, evac!!!")
-				evac(ship, escapeSector)
+			if len(sectors) > 0 {
+				escapeSector := sectors[0]
+				fmt.Printf("Selected escape sector %s", escapeSector.Name)
+				if len(ships) > 0 {
+					fmt.Println("ALERT! Detected Ship, evac!!!")
+					evac(ship, escapeSector)
+				}
 			}
 		}
+		time.Sleep(10 * time.Second)
 	}
 }
 
-func evac(ship dtl.Ship, escapeSector dtl.Sector) error {
+func evac(ship *dtl.Ship, escapeSector *dtl.Sector) error {
 	for {
 		if ship.CanTravel() {
 			return ship.Travel(escapeSector)
@@ -40,7 +43,7 @@ func evac(ship dtl.Ship, escapeSector dtl.Sector) error {
 	}
 }
 
-func scan(ship dtl.Ship) ([]dtl.Ship, []dtl.Sector, error) {
+func scan(ship *dtl.Ship) ([]*dtl.Ship, []*dtl.Sector, error) {
 	for {
 		if ship.CanScan() {
 			return ship.ScanSector()
