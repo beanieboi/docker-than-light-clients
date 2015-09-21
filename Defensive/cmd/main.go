@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	dtl "github.com/bfosberry/docker-than-light-client-go"
@@ -22,7 +23,8 @@ func main() {
 			fmt.Printf("Unable to scan: %s\n", err.Error())
 		} else {
 			if len(sectors) > 0 {
-				escapeSector := sectors[0]
+				index := rand.Intn(len(sectors) - 1)
+				escapeSector := sectors[index]
 				fmt.Printf("Selected escape sector %s", escapeSector.Name)
 				if len(ships) > 0 {
 					fmt.Println("ALERT! Detected Ship, evac!!!")
@@ -37,6 +39,7 @@ func main() {
 func evac(ship *dtl.Ship, escapeSector *dtl.Sector) error {
 	for {
 		if ship.CanTravel() {
+			fmt.Println("Evaccing to %s\n", escapeSector.Name)
 			return ship.Travel(escapeSector)
 		}
 		time.Sleep(1 * time.Second)
