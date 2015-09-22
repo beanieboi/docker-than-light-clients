@@ -22,10 +22,13 @@ func main() {
 		if err != nil {
 			fmt.Printf("Unable to scan: %s\n", err.Error())
 		} else {
+			index := 0
+			if len(sectors) > 1 {
+				index = rand.Intn(len(sectors) - 1)
+			}
 			if len(sectors) > 0 {
-				index := rand.Intn(len(sectors) - 1)
 				escapeSector := sectors[index]
-				fmt.Printf("Selected escape sector %s", escapeSector.Name)
+				fmt.Printf("Selected escape sector %s\n", escapeSector.Name)
 				if len(ships) > 0 {
 					fmt.Println("ALERT! Detected Ship, evac!!!")
 					evac(ship, escapeSector)
@@ -39,7 +42,7 @@ func main() {
 func evac(ship *dtl.Ship, escapeSector *dtl.Sector) error {
 	for {
 		if ship.CanTravel() {
-			fmt.Println("Evaccing to %s\n", escapeSector.Name)
+			fmt.Printf("Evaccing to %s\n", escapeSector.Name)
 			return ship.Travel(escapeSector)
 		}
 		time.Sleep(1 * time.Second)
